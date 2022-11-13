@@ -147,7 +147,7 @@ const line = d3.line().x(([x, _]) => xScale(x)).y(([_, y]) => yScale(y))
 // const cs = ref(['2*e^(i*pi/3)', 'e^(i*pi/2)', '0.8*e^(-i*pi/6)'])
 const test = dft(evaluate(['1+i', '2+1.5*i', '3-2*i']))
 // 初始向量，表示每个旋转向量的初始方向和大小
-const cs = ref(test)
+let cs = ref(test)
 const {time, step, circles, ps, p, track, cosPoints, sinPoints} = useEpicycles(cs)
 
 // 旋转的向量
@@ -173,43 +173,6 @@ const sinWave = computed(() => line(sinPoints.value))
 
 
 onMounted(() => {
-
-  const scene = new THREE.Scene()
-  const camera = new THREE.PerspectiveCamera()
-  const renderer = new THREE.WebGLRenderer()
-  renderer.setSize(200, 200)
-  document.querySelector('#three').append(renderer.domElement)
-
-  const controls = new OrbitControls(camera, renderer.domElement)
-  const axes3d = new THREE.AxesHelper(20)
-  scene.add(axes3d)
-
-  const cubeGeometry = new THREE.BoxGeometry(...[10,10,10,3,3,3])
-  const cubeMaterial = new THREE.MeshBasicMaterial({color: 'pink', wireframe: true})
-  const cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
-  scene.add(cube)
-
-  const vector3s = [[-10, 0, 0], [0, 10, 0], [10, 0, 0]].map(pt => new THREE.Vector3(...pt))
-  const points=new THREE.CatmullRomCurve3(vector3s).getPoints(2)
-  const lineGeometry = new THREE.BufferGeometry().setFromPoints(points)
-  const lineMaterial = new THREE.LineBasicMaterial({color: 'magenta'})
-  const line = new THREE.Line(lineGeometry, lineMaterial)
-  scene.add(line)
-
-  camera.position.z = 20
-
-  const animate = () => {
-    requestAnimationFrame(animate)
-
-    cube.rotation.x += 0.01
-    cube.rotation.y += 0.01
-
-    controls.update()
-    renderer.render(scene, camera)
-  }
-
-  animate()
-
 
   let g = d3.select(svg.value).select("g")
 
